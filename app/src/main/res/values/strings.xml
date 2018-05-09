@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">GithubSearchRepositories</string>
+    <string name="on_back_pressed">Press back again to exit</string>
+</resources>
