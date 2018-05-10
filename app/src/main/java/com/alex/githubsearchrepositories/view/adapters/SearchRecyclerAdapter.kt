@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.alex.githubsearchrepositories.R
 import com.alex.githubsearchrepositories.model.repo.RepoEntity
+import com.alex.githubsearchrepositories.util.DateFormatUtil
 import kotlinx.android.synthetic.main.item_repo_recycler.view.*
 import javax.inject.Inject
 
@@ -28,7 +29,7 @@ class SearchRecyclerAdapter @Inject constructor(private val appContext: Context)
 
         view.repoName.text = result.name
         view.repoDescription.text = result.description
-        view.updatedAt.text = appContext.getString(R.string.updated, result.updatedAt)
+        view.updatedAt.text = appContext.getString(R.string.updated, DateFormatUtil.getTime(result.updatedAt))
         view.repoLanguage.text = result.language
         view.repoWatchers.text = result.watchers.toString()
     }
