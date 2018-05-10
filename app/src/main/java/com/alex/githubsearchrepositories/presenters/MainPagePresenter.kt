@@ -22,63 +22,84 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    fun loadRepos(searchQuery: String) {
+    fun loadRepos(searchQuery: String, loadFromCache: Boolean) {
 
         view?.showLoading()
 
-        apiRequestService.searchRepos(searchQuery)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        object : Observer<Response<SearchResponseEntity>> {
-                            override fun onSubscribe(disposable: Disposable) {
-                                compositeDisposable.add(disposable)
-                            }
+        if (loadFromCache) {
+            getReposFromDb()
+        } else {
+            clearRepos()
 
-                            override fun onNext(response: Response<SearchResponseEntity>) {
-                                if (response.isSuccessful) {
-                                    response.body()?.let {
-                                        saveRepos(it.items)
-                                        //view?.onPageLoaded(it.items)
+            apiRequestService.searchRepos(searchQuery)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            object : Observer<Response<SearchResponseEntity>> {
+                                override fun onSubscribe(disposable: Disposable) {
+                                    compositeDisposable.add(disposable)
+                                }
+
+                                override fun onNext(response: Response<SearchResponseEntity>) {
+                                    if (response.isSuccessful) {
+                                        response.body()?.let {
+                                            saveRepos(it.items)
+                                            view?.onPageLoaded(it.items)
+                                        }
+                                    } else {
+                                        view?.showErrorMessage("Error code " + response.code())
                                     }
-                                } else view?.showErrorMessage("Error code " + response.code())
-                            }
+                                }
 
-                            override fun onComplete() {
-                                view?.hideLoading()
-                            }
+                                override fun onComplete() {
+                                    view?.hideLoading()
+                                }
 
-                            override fun onError(e: Throwable) {
-                                view?.showErrorMessage(e.localizedMessage)
+                                override fun onError(e: Throwable) {
+                                    view?.hideLoading()
+                                    view?.showErrorMessage(e.localizedMessage)
+                                }
                             }
-                        }
-                )
+                    )
+        }
     }
 
-    fun getReposFromDb() {
-        compositeDisposable.add(repoDao.getAllTasks().subscribeOn(Schedulers.io())
+    private fun getReposFromDb() {
+        compositeDisposable.add(repoDao.getRepos().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    view?.onPageLoaded(it)
+                    view?.hideLoading()
+                    view?.onPageLoaded(it as ArrayList<RepoEntity>)
                 }, {
-                    Log.e("Load", "loadTasks Error", it)
+                    view?.showErrorMessage(it.localizedMessage)
+                    Log.e("Load", "Error", it)
                 }))
     }
 
-    private fun saveRepos(repos: List<RepoEntity>) {
+    private fun saveRepos(repos: ArrayList<RepoEntity>) {
         compositeDisposable.add(Observable.fromCallable { repoDao.insertRepos(repos) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    //view?.onSuccessAddTask()
-                    getReposFromDb()
-                    Log.e("Save", "addNewTask Success")
+                    Log.e("Save", "Success")
                 }, {
-                    Log.e("Save", "addNewTask Error", it)
+                    Log.e("Save", "Error", it)
+                }))
+    }
+
+    private fun clearRepos() {
+        compositeDisposable.add(Observable.fromCallable { repoDao.clearRepos() }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Log.e("Clear", "Success")
+                }, {
+                    Log.e("Clear", "Error", it)
                 }))
     }
 
     override fun cancel() {
+        view?.hideLoading()
         if (!compositeDisposable.isDisposed) compositeDisposable.dispose()
     }
 

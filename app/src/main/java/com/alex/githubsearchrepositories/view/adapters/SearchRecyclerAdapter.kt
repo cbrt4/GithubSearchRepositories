@@ -1,13 +1,16 @@
 package com.alex.githubsearchrepositories.view.adapters
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.alex.githubsearchrepositories.R
 import com.alex.githubsearchrepositories.model.repo.RepoEntity
+import kotlinx.android.synthetic.main.item_repo_recycler.view.*
+import javax.inject.Inject
 
-class SearchRecyclerAdapter: RecyclerView.Adapter<SearchRecyclerAdapter.SearchViewHolder>() {
+class SearchRecyclerAdapter @Inject constructor(private val appContext: Context) : RecyclerView.Adapter<SearchRecyclerAdapter.SearchViewHolder>() {
 
     var searchResults = ArrayList<RepoEntity>()
 
@@ -21,7 +24,13 @@ class SearchRecyclerAdapter: RecyclerView.Adapter<SearchRecyclerAdapter.SearchVi
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         val view = holder.itemView
+        val result = searchResults[holder.adapterPosition]
 
+        view.repoName.text = result.name
+        view.repoDescription.text = result.description
+        view.updatedAt.text = appContext.getString(R.string.updated, result.updatedAt)
+        view.repoLanguage.text = result.language
+        view.repoWatchers.text = result.watchers.toString()
     }
 
     class SearchViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)

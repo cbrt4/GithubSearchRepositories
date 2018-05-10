@@ -9,10 +9,16 @@ class SharedPreferencesManager @Inject constructor(context: Context) {
 
     private val fileName = "kithub.shared_preferences"
 
+    private val lastSearchQueryKey = "lastSearchQuery"
+
     private val sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
 
-    fun getPreference(preferenceKey: String) = sharedPreferences.getString(preferenceKey, "")
+    fun getLastSearchQuery(): String {
+        return sharedPreferences.getString(lastSearchQueryKey, "")
+    }
 
-    fun setPreference(preferenceKey: String, preferenceValue: String) = sharedPreferences.edit().putString(preferenceKey, preferenceValue).apply()
+    fun setLastSearchQuery(lastSearchQueryValue: String) {
+        sharedPreferences.edit().putString(lastSearchQueryKey, lastSearchQueryValue).apply()
+    }
 
 }

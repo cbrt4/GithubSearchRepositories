@@ -12,5 +12,5 @@ data class SearchResponseEntity(
         val incompleteResults: Boolean,
 
         @SerializedName("items")
-        val items: List<RepoEntity>
+        val items: ArrayList<RepoEntity>
 )
