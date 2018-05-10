@@ -13,7 +13,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Response
 import javax.inject.Inject
 
 @ScreenScope
@@ -33,19 +32,15 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
-                            object : Observer<Response<SearchResponseEntity>> {
+                            object : Observer<SearchResponseEntity> {
                                 override fun onSubscribe(disposable: Disposable) {
                                     compositeDisposable.add(disposable)
                                 }
 
-                                override fun onNext(response: Response<SearchResponseEntity>) {
-                                    if (response.isSuccessful) {
-                                        response.body()?.let {
-                                            saveRepos(it.items)
-                                            view?.onPageLoaded(it.items)
-                                        }
-                                    } else {
-                                        view?.showErrorMessage("Error code " + response.code())
+                                override fun onNext(response: SearchResponseEntity) {
+                                    response.let {
+                                        saveRepos(it.items)
+                                        view?.onPageLoaded(it.items)
                                     }
                                 }
 
