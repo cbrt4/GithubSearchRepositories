@@ -1,11 +1,14 @@
 package com.alex.githubsearchrepositories.view.activities
 
+import android.support.design.widget.FloatingActionButton
 import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.EditText
+import com.alex.githubsearchrepositories.presenters.MainPagePresenter
+import com.alex.githubsearchrepositories.util.SharedPreferencesManager
 import com.alex.githubsearchrepositories.view.adapters.SearchRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import org.hamcrest.CoreMatchers.instanceOf
@@ -25,44 +28,48 @@ class MainActivityTest {
 
     @Test
     @Throws(Exception::class)
-    fun checkActivity() {
+    fun checkInjects() {
+        val activity = rule.activity
+
+        val sharedPreferencesManager = activity.sharedPreferencesManager
+        assertThat(sharedPreferencesManager, notNullValue())
+        assertThat(sharedPreferencesManager, instanceOf(SharedPreferencesManager::class.java))
+
+        val mainPagePresenter = activity.mainPagePresenter
+        assertThat(mainPagePresenter, notNullValue())
+        assertThat(mainPagePresenter, instanceOf(MainPagePresenter::class.java))
+
+        val searchRecyclerAdapter = activity.searchRecyclerAdapter
+        assertThat(searchRecyclerAdapter, notNullValue())
+        assertThat(searchRecyclerAdapter, instanceOf(SearchRecyclerAdapter::class.java))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun checkViews() {
         val activity = rule.activity
         assertThat(activity, notNullValue())
         assertThat(activity, instanceOf(MainActivity::class.java))
-    }
 
-
-    @Test
-    @Throws(Exception::class)
-    fun checkEditText() {
-        val activity = rule.activity
         val editText = activity.searchEditText
         assertThat(editText, notNullValue())
         assertThat(editText, instanceOf(EditText::class.java))
-    }
 
-    @Test
-    @Throws(Exception::class)
-    fun checkRecyclerView() {
-        val activity = rule.activity
         val recyclerView = activity.resultsRecyclerView
         assertThat(recyclerView, notNullValue())
         assertThat(recyclerView, instanceOf(RecyclerView::class.java))
 
         val layoutManager = recyclerView.layoutManager
+        assertThat(layoutManager, notNullValue())
         assertThat(layoutManager, instanceOf(LinearLayoutManager::class.java))
 
         val adapter = recyclerView.adapter
+        assertThat(adapter, notNullValue())
         assertThat(adapter, instanceOf(SearchRecyclerAdapter::class.java))
-    }
 
-    @Test
-    @Throws(Exception::class)
-    fun checkButton() {
-        val activity = rule.activity
         val floatingActionButton = activity.searchControlButton
         assertThat(floatingActionButton, notNullValue())
+        assertThat(floatingActionButton, instanceOf(FloatingActionButton::class.java))
         assert(floatingActionButton.hasOnClickListeners())
-
     }
 }
