@@ -29,8 +29,6 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
         if (loadFromCache) {
             getReposFromDb()
         } else {
-            clearRepos()
-
             apiRequestService.searchRepos(searchQuery)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -77,22 +75,21 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
     }
 
     private fun saveRepos(repos: ArrayList<RepoEntity>) {
-        compositeDisposable.add(Observable.fromCallable { repoDao.insertRepos(repos) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Log.e("Save", "Success")
-                }, {
-                    Log.e("Save", "Error", it)
-                }))
-    }
-
-    private fun clearRepos() {
         compositeDisposable.add(Observable.fromCallable { repoDao.clearRepos() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Log.e("Clear", "Success")
+
+                    compositeDisposable.add(Observable.fromCallable { repoDao.insertRepos(repos) }
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                Log.e("Save", "Success")
+                            }, {
+                                Log.e("Save", "Error", it)
+                            }))
+
                 }, {
                     Log.e("Clear", "Error", it)
                 }))
