@@ -7,7 +7,7 @@ import javax.inject.Singleton
 @Singleton
 class SharedPreferencesManager @Inject constructor(context: Context) {
 
-    private val fileName = "kithub.shared_preferences"
+    private val fileName = "search_preferences"
 
     private val lastSearchQueryKey = "lastSearchQuery"
 
