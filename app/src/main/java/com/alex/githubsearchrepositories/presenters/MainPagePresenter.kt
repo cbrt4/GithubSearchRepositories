@@ -19,7 +19,7 @@ import javax.inject.Inject
 class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRequestService,
                                             private val repoDao: RepoDao) : BasePresenter<MainView>() {
 
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     fun loadRepos(searchQuery: String, loadFromCache: Boolean) {
 
@@ -39,8 +39,12 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
 
                                 override fun onNext(response: SearchResponseEntity) {
                                     response.let {
-                                        saveRepos(it.items)
-                                        view?.onPageLoaded(it.items)
+                                        if (it.items.size > 0) {
+                                            saveRepos(it.items)
+                                            view?.onPageLoaded(it.items)
+                                        } else {
+                                            view?.showErrorMessage("No results for request '$searchQuery'")
+                                        }
                                     }
                                 }
 
@@ -92,7 +96,10 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
 
     override fun cancel() {
         view?.hideLoading()
-        if (!compositeDisposable.isDisposed) compositeDisposable.dispose()
+        if (!compositeDisposable.isDisposed) {
+            compositeDisposable.dispose()
+            compositeDisposable = CompositeDisposable()
+        }
     }
 
     override fun destroy() {

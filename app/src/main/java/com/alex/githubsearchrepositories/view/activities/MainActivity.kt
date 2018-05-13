@@ -55,14 +55,18 @@ class MainActivity : BaseActivity(), MainView {
 
     private fun setupSearchButton() {
         searchControlButton.setOnClickListener {
-            hideKeyboard()
             if (!isLoading) {
                 currentSearchQuery = searchEditText.text.toString()
+                if (currentSearchQuery.isEmpty()) {
+                    showToast(getString(R.string.emty_query))
+                    return@setOnClickListener
+                }
                 val isCached = currentSearchQuery == lastSearchQuery
                 mainPagePresenter.loadRepos(currentSearchQuery, isCached)
             } else {
                 mainPagePresenter.cancel()
             }
+            hideKeyboard()
         }
     }
 
@@ -93,6 +97,7 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun showErrorMessage(error: String?) {
+        searchRecyclerAdapter.searchResults.clear()
         errorTextView.visibility = View.VISIBLE
         errorTextView.text = error
     }
