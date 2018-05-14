@@ -6,10 +6,12 @@ import com.alex.githubsearchrepositories.model.search.SearchResponseEntity
 import com.alex.githubsearchrepositories.network.ApiRequestService
 import com.alex.githubsearchrepositories.view.activities.view.MainView
 import io.reactivex.Observable
+import io.reactivex.schedulers.TestScheduler
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.InjectMocks
+import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
@@ -18,21 +20,25 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class MainPagePresenterTest {
 
-    @InjectMocks
+    @Rule
+    var scheduler = TestScheduler()
+
+    @Mock
     lateinit var mainView: MainView
 
-    @InjectMocks
+    @Mock
     lateinit var apiRequestService: ApiRequestService
 
-    @InjectMocks
+    @Mock
     lateinit var repoDao: RepoDao
 
-    @InjectMocks
     lateinit var mainPagePresenter: MainPagePresenter
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
+        mainPagePresenter = MainPagePresenter(apiRequestService, repoDao)
+        mainPagePresenter.view = mainView
     }
 
     @Test

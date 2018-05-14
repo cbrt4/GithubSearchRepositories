@@ -19,7 +19,7 @@ import javax.inject.Inject
 class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRequestService,
                                             private val repoDao: RepoDao) : BasePresenter<MainView>() {
 
-    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     fun loadRepos(searchQuery: String, loadFromCache: Boolean) {
 
@@ -96,10 +96,7 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
 
     override fun cancel() {
         view?.hideLoading()
-        if (!compositeDisposable.isDisposed) {
-            compositeDisposable.dispose()
-            compositeDisposable = CompositeDisposable()
-        }
+        compositeDisposable.clear()
     }
 
     override fun destroy() {
