@@ -101,5 +101,6 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
 
     override fun destroy() {
         view = null
+        compositeDisposable.dispose()
     }
 }

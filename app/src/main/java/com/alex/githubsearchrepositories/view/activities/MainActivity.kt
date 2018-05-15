@@ -43,6 +43,11 @@ class MainActivity : BaseActivity(), MainView {
         mainPagePresenter.view = this
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mainPagePresenter.destroy()
+    }
+
     private fun setupViews() {
         setupRecyclerView()
         setupSearchButton()
