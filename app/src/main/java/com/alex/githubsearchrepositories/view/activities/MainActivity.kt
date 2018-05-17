@@ -10,7 +10,6 @@ import com.alex.githubsearchrepositories.dagger.components.DaggerScreenComponent
 import com.alex.githubsearchrepositories.model.repo.RepoEntity
 import com.alex.githubsearchrepositories.presenters.MainPagePresenter
 import com.alex.githubsearchrepositories.util.ScreenScope
-import com.alex.githubsearchrepositories.util.SharedPreferencesManager
 import com.alex.githubsearchrepositories.view.activities.view.MainView
 import com.alex.githubsearchrepositories.view.adapters.SearchRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,9 +17,6 @@ import javax.inject.Inject
 
 @ScreenScope
 class MainActivity : BaseActivity(), MainView {
-
-    @Inject
-    lateinit var sharedPreferencesManager: SharedPreferencesManager
 
     @Inject
     lateinit var mainPagePresenter: MainPagePresenter
@@ -39,7 +35,6 @@ class MainActivity : BaseActivity(), MainView {
 
         setupViews()
 
-        lastSearchQuery = sharedPreferencesManager.getLastSearchQuery()
         mainPagePresenter.view = this
     }
 
@@ -66,8 +61,7 @@ class MainActivity : BaseActivity(), MainView {
                     showToast(getString(R.string.emty_query))
                     return@setOnClickListener
                 }
-                val isCached = currentSearchQuery == lastSearchQuery
-                mainPagePresenter.loadRepos(currentSearchQuery, isCached)
+                mainPagePresenter.loadRepos(currentSearchQuery)
             } else {
                 mainPagePresenter.cancel()
             }
@@ -75,15 +69,9 @@ class MainActivity : BaseActivity(), MainView {
         }
     }
 
-    private fun saveQuery(query: String) {
-        lastSearchQuery = query
-        sharedPreferencesManager.setLastSearchQuery(query)
-    }
-
     override fun onPageLoaded(result: ArrayList<RepoEntity>) {
         searchRecyclerAdapter.searchResults = result
         searchRecyclerAdapter.notifyDataSetChanged()
-        saveQuery(currentSearchQuery)
     }
 
     override fun showLoading() {

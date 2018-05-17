@@ -19,6 +19,4 @@ class KitHubApplication : Application() {
                 .applicationModule(ApplicationModule(this))
                 .build()
     }
-
-    fun getSharedPreferencesManager() = applicationComponent.sharedPreferences()
 }
