@@ -61,6 +61,8 @@ class MainActivity : BaseActivity(), MainView {
                     showToast(getString(R.string.emty_query))
                     return@setOnClickListener
                 }
+                searchRecyclerAdapter.searchResults.clear()
+                searchRecyclerAdapter.notifyDataSetChanged()
                 mainPagePresenter.loadRepos(currentSearchQuery)
             } else {
                 mainPagePresenter.cancel()
@@ -75,16 +77,16 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun showLoading() {
-        searchControlButton.setImageDrawable(resources.getDrawable(R.drawable.ic_cancel, this.theme))
         errorTextView.visibility = View.GONE
-        resultsRecyclerView.visibility = View.GONE
+        searchControlButton.setImageDrawable(resources.getDrawable(R.drawable.ic_cancel, this.theme))
+        //resultsRecyclerView.visibility = View.GONE
         loadingProgressBar.visibility = View.VISIBLE
         isLoading = true
     }
 
     override fun hideLoading() {
         searchControlButton.setImageDrawable(resources.getDrawable(R.drawable.ic_confirm, this.theme))
-        resultsRecyclerView.visibility = View.VISIBLE
+        //resultsRecyclerView.visibility = View.VISIBLE
         loadingProgressBar.visibility = View.GONE
         isLoading = false
     }
