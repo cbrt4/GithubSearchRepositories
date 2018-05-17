@@ -79,14 +79,12 @@ class MainActivity : BaseActivity(), MainView {
     override fun showLoading() {
         errorTextView.visibility = View.GONE
         searchControlButton.setImageDrawable(resources.getDrawable(R.drawable.ic_cancel, this.theme))
-        //resultsRecyclerView.visibility = View.GONE
         loadingProgressBar.visibility = View.VISIBLE
         isLoading = true
     }
 
     override fun hideLoading() {
         searchControlButton.setImageDrawable(resources.getDrawable(R.drawable.ic_confirm, this.theme))
-        //resultsRecyclerView.visibility = View.VISIBLE
         loadingProgressBar.visibility = View.GONE
         isLoading = false
     }
