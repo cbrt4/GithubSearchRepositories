@@ -24,15 +24,16 @@ class SearchRecyclerAdapter @Inject constructor(private val appContext: Context)
     }
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-        val view = holder.itemView
-        val result = searchResults[holder.adapterPosition]
-
-        view.repoName.text = result.name
-        view.repoDescription.text = result.description
-        view.updatedAt.text = appContext.getString(R.string.updated, DateFormatUtil.getTime(result.updatedAt))
-        view.repoLanguage.text = result.language
-        view.repoWatchers.text = result.watchers.toString()
+        holder.bindData(searchResults[holder.adapterPosition])
     }
 
-    class SearchViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
+    inner class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bindData(repoEntity: RepoEntity) {
+            itemView.repoName.text = repoEntity.name
+            itemView.repoDescription.text = repoEntity.description
+            itemView.updatedAt.text = appContext.getString(R.string.updated, DateFormatUtil.getTime(repoEntity.updatedAt))
+            itemView.repoLanguage.text = repoEntity.language
+            itemView.repoWatchers.text = repoEntity.watchers.toString()
+        }
+    }
 }

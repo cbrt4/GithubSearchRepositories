@@ -15,6 +15,7 @@ class DateFormatUtil {
         private const val DAY = 24 * HOUR
 
         fun getTime(date: String?): String {
+            Locale.setDefault(Locale.US)
 
             val format = SimpleDateFormat(FORMAT_PATTERN, Locale.getDefault())
             val dateMillis: Long
@@ -42,7 +43,7 @@ class DateFormatUtil {
             } else if (difference >= DAY && difference < 2 * DAY) {
                 "yesterday"
             } else {
-                DateFormat.format("d MMM yyyy", Date(dateMillis)).toString()
+                DateFormat.format("MMM d, yyyy", Date(dateMillis)).toString()
             }
         }
     }

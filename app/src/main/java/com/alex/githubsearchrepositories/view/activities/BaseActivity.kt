@@ -7,14 +7,11 @@ import android.view.Gravity
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import kotlinx.android.synthetic.*
-import java.util.*
 
 abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        Locale.setDefault(Locale.US)
 
         inject()
     }

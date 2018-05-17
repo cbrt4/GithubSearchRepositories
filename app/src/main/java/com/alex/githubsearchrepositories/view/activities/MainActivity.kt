@@ -93,9 +93,11 @@ class MainActivity : BaseActivity(), MainView {
         errorTextView.text = error
     }
 
-    override fun inject() = DaggerScreenComponent.builder()
-            .applicationComponent((application as KitHubApplication).applicationComponent)
-            .build().inject(this)
+    override fun inject() {
+        DaggerScreenComponent.builder()
+                .applicationComponent((application as KitHubApplication).applicationComponent)
+                .build().inject(this)
+    }
 
     override fun onBackPressed() {
         if (backPressedTimeOut + 2000 > System.currentTimeMillis()) {

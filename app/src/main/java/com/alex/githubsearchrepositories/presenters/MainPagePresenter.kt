@@ -40,7 +40,6 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
                     view?.showErrorMessage(it.localizedMessage)
                     Log.e("Load", "Error", it)
                 }))
-
     }
 
     private fun getReposFromDb() {
