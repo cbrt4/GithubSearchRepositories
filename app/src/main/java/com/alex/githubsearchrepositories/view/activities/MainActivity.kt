@@ -24,8 +24,6 @@ class MainActivity : BaseActivity(), MainView {
     @Inject
     lateinit var searchRecyclerAdapter: SearchRecyclerAdapter
 
-    private var lastSearchQuery = ""
-    private var currentSearchQuery = ""
     private var isLoading = false
     private var backPressedTimeOut: Long = 0
 
@@ -56,7 +54,7 @@ class MainActivity : BaseActivity(), MainView {
     private fun setupSearchButton() {
         searchControlButton.setOnClickListener {
             if (!isLoading) {
-                currentSearchQuery = searchEditText.text.toString()
+                val currentSearchQuery = searchEditText.text.toString()
                 if (currentSearchQuery.isEmpty()) {
                     showToast(getString(R.string.emty_query))
                     return@setOnClickListener
