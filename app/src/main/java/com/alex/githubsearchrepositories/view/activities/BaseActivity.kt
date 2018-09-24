@@ -6,12 +6,17 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.alex.githubsearchrepositories.util.Layout
 import kotlinx.android.synthetic.*
 
 abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        javaClass.getAnnotation(Layout::class.java).let {
+            setContentView(it.id)
+        }
 
         inject()
     }

@@ -9,6 +9,7 @@ import com.alex.githubsearchrepositories.application.KitHubApplication
 import com.alex.githubsearchrepositories.dagger.components.DaggerScreenComponent
 import com.alex.githubsearchrepositories.model.repo.RepoEntity
 import com.alex.githubsearchrepositories.presenters.MainPagePresenter
+import com.alex.githubsearchrepositories.util.Layout
 import com.alex.githubsearchrepositories.util.ScreenScope
 import com.alex.githubsearchrepositories.view.activities.view.MainView
 import com.alex.githubsearchrepositories.view.adapters.SearchRecyclerAdapter
@@ -16,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 @ScreenScope
+@Layout(id = R.layout.activity_main)
 class MainActivity : BaseActivity(), MainView {
 
     @Inject
@@ -28,7 +30,6 @@ class MainActivity : BaseActivity(), MainView {
     private var backPressedTimeOut: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_main)
         super.onCreate(savedInstanceState)
 
         setupViews()
