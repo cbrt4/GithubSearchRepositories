@@ -18,7 +18,7 @@
         android:paddingStart="@dimen/edges_padding"
         android:paddingTop="8dp"
         android:textColor="@color/colorAccent"
-        android:textSize="22sp"
+        android:textSize="20sp"
         tools:text="RepoName" />
 
     <TextView
@@ -29,13 +29,13 @@
         android:paddingEnd="@dimen/edges_padding"
         android:paddingStart="@dimen/edges_padding"
         android:textColor="@color/colorPrimary"
-        android:textSize="16sp"
+        android:textSize="15sp"
         tools:text="RepoDescription" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/edges_padding">
+        android:layout_marginTop="8dp">
 
         <TextView
             android:id="@+id/updatedAt"
@@ -49,13 +49,13 @@
             android:paddingStart="@dimen/edges_padding"
             android:paddingTop="8dp"
             android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
+            android:textSize="14sp"
             tools:text="UpdatedAt" />
 
         <ImageView
             android:id="@+id/repoLanguageImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/repoLanguage"
             android:paddingBottom="8dp"
@@ -70,19 +70,18 @@
             android:layout_toStartOf="@id/repoWatchersImage"
             android:fontFamily="@font/source_sans_pro_regular"
             android:paddingBottom="8dp"
-            android:paddingEnd="@dimen/edges_padding"
-            android:paddingStart="4dp"
             android:paddingTop="8dp"
             android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
+            android:textSize="14sp"
             tools:text="Kotlin" />
 
         <ImageView
             android:id="@+id/repoWatchersImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/repoWatchers"
+            android:layout_marginStart="@dimen/edges_padding"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
             android:src="@drawable/ic_star" />
@@ -96,10 +95,9 @@
             android:fontFamily="@font/source_sans_pro_regular"
             android:paddingBottom="8dp"
             android:paddingEnd="@dimen/edges_padding"
-            android:paddingStart="4dp"
             android:paddingTop="8dp"
             android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
+            android:textSize="14sp"
             tools:text="99" />
 
     </RelativeLayout>
