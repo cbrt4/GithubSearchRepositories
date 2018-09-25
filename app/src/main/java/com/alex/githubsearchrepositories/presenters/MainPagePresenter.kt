@@ -37,6 +37,7 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
                     view?.onPageLoaded(it.items)
                     view?.hideLoading()
                 }, {
+                    view?.hideLoading()
                     view?.showErrorMessage(it.localizedMessage)
                     Log.e("Load", "Error", it)
                 }))
@@ -49,6 +50,7 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
                     view?.onPageLoaded(it as ArrayList<RepoEntity>)
                     view?.hideLoading()
                 }, {
+                    view?.hideLoading()
                     view?.showErrorMessage(it.localizedMessage)
                     Log.e("Load", "Error", it)
                 }))

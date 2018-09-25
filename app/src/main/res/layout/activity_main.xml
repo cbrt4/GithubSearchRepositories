@@ -19,8 +19,8 @@
                 android:id="@+id/searchBarContainer"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/app_bar_height"
-                android:paddingEnd="@dimen/edges_padding"
                 android:paddingStart="@dimen/edges_padding"
+                android:paddingEnd="@dimen/edges_padding"
                 app:layout_collapseMode="parallax">
 
                 <EditText
@@ -45,26 +45,32 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/resultsRecyclerView"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/resultsPullRefresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:paddingBottom="12dp"
-            android:paddingTop="12dp"
-            android:scrollbars="vertical" />
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/resultsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:scrollbars="vertical" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <TextView
             android:id="@+id/errorTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:fontFamily="@font/source_sans_pro_semibold"
             android:gravity="center"
             android:padding="@dimen/edges_padding"
             android:text="@string/no_results"
             android:textColor="@color/colorPrimary"
             android:textSize="16sp"
-            android:background="@color/white"
             android:visibility="gone" />
 
         <ProgressBar

@@ -1,6 +1,7 @@
 package com.alex.githubsearchrepositories.view.activities
 
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 @ScreenScope
 @Layout(id = R.layout.activity_main)
-class MainActivity : BaseActivity(), MainView {
+class MainActivity : BaseActivity(), MainView, SwipeRefreshLayout.OnRefreshListener {
 
     @Inject
     lateinit var mainPagePresenter: MainPagePresenter
@@ -43,8 +44,14 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     private fun setupViews() {
+        setupPullRefresh()
         setupRecyclerView()
         setupSearchButton()
+    }
+
+    private fun setupPullRefresh() {
+        resultsPullRefresh.isEnabled = false
+        resultsPullRefresh.setOnRefreshListener(this)
     }
 
     private fun setupRecyclerView() {
@@ -54,19 +61,23 @@ class MainActivity : BaseActivity(), MainView {
 
     private fun setupSearchButton() {
         searchControlButton.setOnClickListener {
-            if (!isLoading) {
-                val currentSearchQuery = searchEditText.text.toString()
-                if (currentSearchQuery.isEmpty()) {
-                    showToast(getString(R.string.emty_query))
-                    return@setOnClickListener
-                }
-                searchRecyclerAdapter.searchResults.clear()
-                searchRecyclerAdapter.notifyDataSetChanged()
-                mainPagePresenter.loadRepos(currentSearchQuery)
-            } else {
-                mainPagePresenter.cancel()
-            }
+            loadSearchResults()
             hideKeyboard()
+        }
+    }
+
+    private fun loadSearchResults() {
+        if (!isLoading) {
+            val currentSearchQuery = searchEditText.text.toString()
+            if (currentSearchQuery.isEmpty()) {
+                showToast(getString(R.string.emty_query))
+                return
+            }
+            searchRecyclerAdapter.searchResults.clear()
+            searchRecyclerAdapter.notifyDataSetChanged()
+            mainPagePresenter.loadRepos(currentSearchQuery)
+        } else {
+            mainPagePresenter.cancel()
         }
     }
 
@@ -80,18 +91,25 @@ class MainActivity : BaseActivity(), MainView {
         searchControlButton.setImageDrawable(resources.getDrawable(R.drawable.ic_cancel, this.theme))
         loadingProgressBar.visibility = View.VISIBLE
         isLoading = true
+        resultsPullRefresh.isEnabled = false
     }
 
     override fun hideLoading() {
         searchControlButton.setImageDrawable(resources.getDrawable(R.drawable.ic_confirm, this.theme))
         loadingProgressBar.visibility = View.GONE
         isLoading = false
+        resultsPullRefresh.isEnabled = true
     }
 
     override fun showErrorMessage(error: String?) {
         searchRecyclerAdapter.searchResults.clear()
         errorTextView.visibility = View.VISIBLE
         errorTextView.text = error
+    }
+
+    override fun onRefresh() {
+        resultsPullRefresh.isRefreshing = false
+        loadSearchResults()
     }
 
     override fun inject() {
