@@ -5,20 +5,20 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
 import com.alex.githubsearchrepositories.R
-import com.alex.githubsearchrepositories.application.KitHubApplication
+import com.alex.githubsearchrepositories.application.GitHubApplication
 import com.alex.githubsearchrepositories.dagger.components.DaggerScreenComponent
 import com.alex.githubsearchrepositories.model.repo.RepoEntity
 import com.alex.githubsearchrepositories.presenters.MainPagePresenter
 import com.alex.githubsearchrepositories.util.Layout
 import com.alex.githubsearchrepositories.util.ScreenScope
-import com.alex.githubsearchrepositories.view.activities.view.MainView
+import com.alex.githubsearchrepositories.view.AbstractView
 import com.alex.githubsearchrepositories.view.adapters.SearchRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 @ScreenScope
 @Layout(id = R.layout.activity_main)
-class MainActivity : BaseActivity(), MainView {
+class MainActivity : AbstractActivity(), AbstractView<List<RepoEntity>> {
 
     @Inject
     lateinit var mainPagePresenter: MainPagePresenter
@@ -66,7 +66,7 @@ class MainActivity : BaseActivity(), MainView {
                 showToast(getString(R.string.emty_query))
                 return
             }
-            searchRecyclerAdapter.searchResults.clear()
+            searchRecyclerAdapter.searchResults = ArrayList()
             searchRecyclerAdapter.notifyDataSetChanged()
             mainPagePresenter.loadRepos(currentSearchQuery)
         } else {
@@ -74,8 +74,8 @@ class MainActivity : BaseActivity(), MainView {
         }
     }
 
-    override fun onPageLoaded(result: ArrayList<RepoEntity>) {
-        searchRecyclerAdapter.searchResults = result
+    override fun update(element: List<RepoEntity>) {
+        searchRecyclerAdapter.searchResults = element
         searchRecyclerAdapter.notifyDataSetChanged()
     }
 
@@ -92,15 +92,15 @@ class MainActivity : BaseActivity(), MainView {
         isLoading = false
     }
 
-    override fun showErrorMessage(error: String?) {
-        searchRecyclerAdapter.searchResults.clear()
+    override fun reportError(errorMessage: String) {
+        searchRecyclerAdapter.searchResults = ArrayList()
         errorTextView.visibility = View.VISIBLE
-        errorTextView.text = error
+        errorTextView.text = errorMessage
     }
 
     override fun inject() {
         DaggerScreenComponent.builder()
-                .applicationComponent((application as KitHubApplication).applicationComponent)
+                .applicationComponent((application as GitHubApplication).applicationComponent)
                 .build().inject(this)
     }
 

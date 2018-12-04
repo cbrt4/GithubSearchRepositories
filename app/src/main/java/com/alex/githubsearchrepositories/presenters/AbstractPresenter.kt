@@ -1,8 +1,8 @@
 package com.alex.githubsearchrepositories.presenters
 
-abstract class BasePresenter<T> {
+abstract class AbstractPresenter<V> {
 
-    var view: T? = null
+    var view: V? = null
 
     abstract fun cancel()
 

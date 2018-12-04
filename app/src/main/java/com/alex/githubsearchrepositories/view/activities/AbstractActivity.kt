@@ -9,7 +9,7 @@ import android.widget.Toast
 import com.alex.githubsearchrepositories.util.Layout
 import kotlinx.android.synthetic.*
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class AbstractActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

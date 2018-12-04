@@ -5,7 +5,7 @@ import com.alex.githubsearchrepositories.dagger.components.ApplicationComponent
 import com.alex.githubsearchrepositories.dagger.components.DaggerApplicationComponent
 import com.alex.githubsearchrepositories.dagger.modules.ApplicationModule
 
-class KitHubApplication : Application() {
+class GitHubApplication : Application() {
 
     lateinit var applicationComponent: ApplicationComponent
 

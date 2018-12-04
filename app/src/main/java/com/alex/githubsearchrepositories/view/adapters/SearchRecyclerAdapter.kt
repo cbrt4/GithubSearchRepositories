@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class SearchRecyclerAdapter @Inject constructor(private val appContext: Context) : RecyclerView.Adapter<SearchRecyclerAdapter.SearchViewHolder>() {
 
-    var searchResults = ArrayList<RepoEntity>()
+    var searchResults: List<RepoEntity> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         return SearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_repo_recycler, parent, false))
