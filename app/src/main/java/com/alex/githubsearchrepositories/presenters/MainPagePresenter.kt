@@ -8,12 +8,9 @@ import com.alex.githubsearchrepositories.network.ApiRequestService
 import com.alex.githubsearchrepositories.util.ScreenScope
 import com.alex.githubsearchrepositories.util.SharedPreferencesManager
 import com.alex.githubsearchrepositories.view.AbstractView
-import com.alex.githubsearchrepositories.view.activities.AbstractActivity
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import com.alex.githubsearchrepositories.view.activities.MainActivity
+import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @ScreenScope
@@ -22,6 +19,7 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
                                             private val sharedPreferencesManager: SharedPreferencesManager) : AbstractPresenter<AbstractView<List<RepoEntity>>>() {
 
     private var currentQuery = ""
+    private var currentJob: Job? = null
 
     fun loadRepos(searchQuery: String) {
         view?.showLoading()
@@ -30,7 +28,7 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
     }
 
     private fun getRepos(searchQuery: String) {
-        GlobalScope.launch(Dispatchers.Main) {
+        currentJob = GlobalScope.launch(Dispatchers.Main) {
             view?.showLoading()
             val response = apiRequestService.searchRepos(searchQuery).await()
             view?.hideLoading()
@@ -59,7 +57,7 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
                     }
                 },
                 {
-                    repoDao.getRepos().observe(view as AbstractActivity, Observer<List<RepoEntity>> { repos ->
+                    repoDao.getRepos().observe(view as MainActivity, Observer<List<RepoEntity>> { repos ->
                         view?.hideLoading()
                         repos?.let {
                             view?.update(it)
@@ -105,6 +103,7 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
     }
 
     override fun cancel() {
+        currentJob?.cancel()
         view?.hideLoading()
     }
 
