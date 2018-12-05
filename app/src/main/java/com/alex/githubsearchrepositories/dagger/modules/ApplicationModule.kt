@@ -16,9 +16,9 @@ class ApplicationModule(val context: Context) {
     fun provideApplicationContext(): Context = context
 
     @Provides
-    fun provideAppDatabase(context: Context): AppDatabase =
-            Room.databaseBuilder(context, AppDatabase::class.java, "repos-db").build()
-
-    @Provides
-    fun provideRepoDao(database: AppDatabase): RepoDao = database.repoDao()
+    fun provideRepoDao(): RepoDao {
+        return Room.databaseBuilder(context, AppDatabase::class.java, "repos-db")
+                .build()
+                .repoDao()
+    }
 }

@@ -3,7 +3,6 @@ package com.alex.githubsearchrepositories.dagger.modules
 import android.content.Context
 import com.alex.githubsearchrepositories.network.ApiRequestService
 import com.alex.githubsearchrepositories.network.BASE_URL
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.readystatesoftware.chuck.ChuckInterceptor
@@ -22,35 +21,27 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideCache(context: Context): Cache = Cache(File(context.cacheDir, "responses"), 1024 * 1024 * 16)
+    fun provideOkHttp(context: Context): OkHttpClient {
+        return OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(1, TimeUnit.MINUTES)
+                .writeTimeout(1, TimeUnit.MINUTES)
+                .followRedirects(true)
+                .addInterceptor(ChuckInterceptor(context))
+                .cache(Cache(File(context.cacheDir, "responses"), 1024 * 1024 * 16))
+                .build()
+    }
 
     @Provides
     @Singleton
-    fun provideOkHttp(context: Context, cache: Cache): OkHttpClient = OkHttpClient.Builder()
-            .connectTimeout(1, TimeUnit.MINUTES)
-            .readTimeout(1, TimeUnit.MINUTES)
-            .writeTimeout(1, TimeUnit.MINUTES)
-            .followRedirects(true)
-            .addInterceptor(ChuckInterceptor(context))
-            .cache(cache)
-            .build()
-
-    @Provides
-    @Singleton
-    fun provideGson(): Gson = GsonBuilder()
-            .setLenient()
-            .create()
-
-    @Provides
-    @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(okHttpClient)
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-
-    @Provides
-    @Singleton
-    fun provideApiRequestService(retrofit: Retrofit): ApiRequestService = retrofit.create(ApiRequestService::class.java)
+    fun provideApiRequestService(okHttpClient: OkHttpClient): ApiRequestService {
+        return Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(okHttpClient)
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
+                .addConverterFactory(GsonConverterFactory.create(GsonBuilder()
+                        .setLenient()
+                        .create()))
+                .build().create(ApiRequestService::class.java)
+    }
 }
