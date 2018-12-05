@@ -34,9 +34,13 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
             view?.hideLoading()
             if (response.isSuccessful) {
                 response.body()?.let {
-                    saveRepos(it.items)
-                    saveQuery(searchQuery)
-                    view?.update(it.items)
+                    if (it.items.isEmpty()) {
+                        view?.reportError("No results for request '$searchQuery'")
+                    } else {
+                        saveRepos(it.items)
+                        saveQuery(searchQuery)
+                        view?.update(it.items)
+                    }
                 }
             } else {
                 response.errorBody()?.let {

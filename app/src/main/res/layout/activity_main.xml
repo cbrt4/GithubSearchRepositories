@@ -62,7 +62,6 @@
             android:fontFamily="@font/source_sans_pro_semibold"
             android:gravity="center"
             android:padding="@dimen/edges_padding"
-            android:text="@string/no_results"
             android:textColor="@color/colorPrimary"
             android:textSize="16sp"
             android:visibility="gone" />

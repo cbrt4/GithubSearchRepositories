@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">GithubSearchRepositories</string>
     <string name="on_back_pressed">Press back again to exit</string>
-    <string name="no_results">There are no results for your request.</string>
     <string name="search_hint">Search GitHub</string>
     <string name="updated">Updated %s</string>
     <string name="emty_query">Query is empty</string>
