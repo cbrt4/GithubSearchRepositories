@@ -1,6 +1,6 @@
 package com.alex.githubsearchrepositories.presenters
 
-abstract class AbstractPresenter<V> {
+abstract class Presenter<V> {
 
     var view: V? = null
 

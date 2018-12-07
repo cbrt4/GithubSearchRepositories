@@ -5,26 +5,18 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
 import com.alex.githubsearchrepositories.R
-import com.alex.githubsearchrepositories.application.GitHubApplication
-import com.alex.githubsearchrepositories.dagger.components.DaggerScreenComponent
-import com.alex.githubsearchrepositories.model.repo.RepoEntity
+import com.alex.githubsearchrepositories.model.repo.Repo
 import com.alex.githubsearchrepositories.presenters.MainPagePresenter
 import com.alex.githubsearchrepositories.util.Layout
-import com.alex.githubsearchrepositories.util.ScreenScope
 import com.alex.githubsearchrepositories.view.AbstractView
 import com.alex.githubsearchrepositories.view.adapters.SearchRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
 
-@ScreenScope
 @Layout(id = R.layout.activity_main)
-class MainActivity : AbstractActivity(), AbstractView<List<RepoEntity>> {
+class MainActivity : AbstractActivity(), AbstractView<List<Repo>> {
 
-    @Inject
-    lateinit var mainPagePresenter: MainPagePresenter
-
-    @Inject
-    lateinit var searchRecyclerAdapter: SearchRecyclerAdapter
+    private val mainPagePresenter = MainPagePresenter()
+    private val searchRecyclerAdapter = SearchRecyclerAdapter()
 
     private var isLoading = false
     private var backPressedTimeOut: Long = 0
@@ -74,7 +66,7 @@ class MainActivity : AbstractActivity(), AbstractView<List<RepoEntity>> {
         }
     }
 
-    override fun update(element: List<RepoEntity>) {
+    override fun update(element: List<Repo>) {
         searchRecyclerAdapter.searchResults = element
         searchRecyclerAdapter.notifyDataSetChanged()
     }
@@ -96,12 +88,6 @@ class MainActivity : AbstractActivity(), AbstractView<List<RepoEntity>> {
         searchRecyclerAdapter.searchResults = ArrayList()
         errorTextView.visibility = View.VISIBLE
         errorTextView.text = errorMessage
-    }
-
-    override fun inject() {
-        DaggerScreenComponent.builder()
-                .applicationComponent((application as GitHubApplication).applicationComponent)
-                .build().inject(this)
     }
 
     override fun onBackPressed() {

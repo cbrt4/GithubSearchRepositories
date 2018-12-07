@@ -2,21 +2,21 @@ package com.alex.githubsearchrepositories.presenters
 
 import android.arch.lifecycle.Observer
 import android.util.Log
-import com.alex.githubsearchrepositories.model.repo.RepoEntity
+import com.alex.githubsearchrepositories.model.repo.Repo
+import com.alex.githubsearchrepositories.model.room.dao.DaoProvider
 import com.alex.githubsearchrepositories.model.room.dao.RepoDao
 import com.alex.githubsearchrepositories.network.ApiRequestService
-import com.alex.githubsearchrepositories.util.ScreenScope
-import com.alex.githubsearchrepositories.util.SharedPreferencesManager
+import com.alex.githubsearchrepositories.network.ApiRequestServiceProvider
+import com.alex.githubsearchrepositories.sharedpreferences.SharedPreferences
+import com.alex.githubsearchrepositories.sharedpreferences.SharedPreferencesProvider
 import com.alex.githubsearchrepositories.view.AbstractView
 import com.alex.githubsearchrepositories.view.activities.MainActivity
 import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
-import javax.inject.Inject
 
-@ScreenScope
-class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRequestService,
-                                            private val repoDao: RepoDao,
-                                            private val sharedPreferencesManager: SharedPreferencesManager) : AbstractPresenter<AbstractView<List<RepoEntity>>>() {
+class MainPagePresenter(private val apiRequestService: ApiRequestService = ApiRequestServiceProvider.apiRequestService(),
+                        private val repoDao: RepoDao = DaoProvider.repoDao(),
+                        private val sharedPreferencesManager: SharedPreferences = SharedPreferencesProvider.sharedPreferences()) : Presenter<AbstractView<List<Repo>>>() {
 
     private var currentQuery = ""
     private var currentJob: Job? = null
@@ -61,7 +61,7 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
                     }
                 },
                 {
-                    repoDao.getRepos().observe(view as MainActivity, Observer<List<RepoEntity>> { repos ->
+                    repoDao.getRepos().observe(view as MainActivity, Observer<List<Repo>> { repos ->
                         view?.hideLoading()
                         repos?.let {
                             view?.update(it)
@@ -70,7 +70,7 @@ class MainPagePresenter @Inject constructor(private val apiRequestService: ApiRe
                 })
     }
 
-    private fun saveRepos(repos: ArrayList<RepoEntity>) {
+    private fun saveRepos(repos: ArrayList<Repo>) {
         GlobalScope.launch(Dispatchers.Default,
                 CoroutineStart.DEFAULT,
                 { repoDao.insertRepos(repos) },

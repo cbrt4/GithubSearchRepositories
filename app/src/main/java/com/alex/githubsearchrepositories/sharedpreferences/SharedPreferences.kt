@@ -1,11 +1,8 @@
-package com.alex.githubsearchrepositories.util
+package com.alex.githubsearchrepositories.sharedpreferences
 
 import android.content.Context
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class SharedPreferencesManager @Inject constructor(context: Context) {
+class SharedPreferences(context: Context) {
 
     private val fileName = "search_preferences"
 

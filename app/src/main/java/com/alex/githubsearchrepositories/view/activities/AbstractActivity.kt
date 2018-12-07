@@ -14,14 +14,10 @@ abstract class AbstractActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        javaClass.getAnnotation(Layout::class.java).let {
+        javaClass.getAnnotation(Layout::class.java)?.let {
             setContentView(it.id)
         }
-
-        inject()
     }
-
-    abstract fun inject()
 
     override fun onDestroy() {
         super.onDestroy()

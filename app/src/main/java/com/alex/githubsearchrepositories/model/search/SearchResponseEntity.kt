@@ -1,6 +1,6 @@
 package com.alex.githubsearchrepositories.model.search
 
-import com.alex.githubsearchrepositories.model.repo.RepoEntity
+import com.alex.githubsearchrepositories.model.repo.Repo
 import com.google.gson.annotations.SerializedName
 
 data class SearchResponseEntity(
@@ -12,5 +12,5 @@ data class SearchResponseEntity(
         val incompleteResults: Boolean,
 
         @SerializedName("items")
-        val items: ArrayList<RepoEntity>
+        val items: ArrayList<Repo>
 )

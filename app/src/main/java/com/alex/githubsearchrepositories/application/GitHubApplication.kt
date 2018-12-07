@@ -1,22 +1,21 @@
 package com.alex.githubsearchrepositories.application
 
 import android.app.Application
-import com.alex.githubsearchrepositories.dagger.components.ApplicationComponent
-import com.alex.githubsearchrepositories.dagger.components.DaggerApplicationComponent
-import com.alex.githubsearchrepositories.dagger.modules.ApplicationModule
+import com.alex.githubsearchrepositories.model.room.dao.DaoProvider
+import com.alex.githubsearchrepositories.network.ApiRequestServiceProvider
+import com.alex.githubsearchrepositories.sharedpreferences.SharedPreferencesProvider
 
 class GitHubApplication : Application() {
 
-    lateinit var applicationComponent: ApplicationComponent
-
     override fun onCreate() {
         super.onCreate()
-        initApplicationComponent()
+
+        initComponents()
     }
 
-    private fun initApplicationComponent() {
-        applicationComponent = DaggerApplicationComponent.builder()
-                .applicationModule(ApplicationModule(this))
-                .build()
+    private fun initComponents() {
+        DaoProvider.init(this)
+        ApiRequestServiceProvider.init(this)
+        SharedPreferencesProvider.init(this)
     }
 }

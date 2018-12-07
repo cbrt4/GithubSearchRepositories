@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "repos")
-data class RepoEntity(
+data class Repo(
         @PrimaryKey(autoGenerate = true)
         var id: Long?,
 

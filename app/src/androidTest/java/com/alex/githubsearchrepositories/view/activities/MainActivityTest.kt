@@ -7,8 +7,6 @@ import android.support.test.runner.AndroidJUnit4
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.EditText
-import com.alex.githubsearchrepositories.presenters.MainPagePresenter
-import com.alex.githubsearchrepositories.util.SharedPreferencesManager
 import com.alex.githubsearchrepositories.view.adapters.SearchRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import org.hamcrest.CoreMatchers.instanceOf
@@ -18,31 +16,12 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
 @MediumTest
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
     @Rule
     @JvmField
     var rule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
-
-    @Test
-    @Throws(Exception::class)
-    fun checkInjects() {
-        val activity = rule.activity
-
-        val sharedPreferencesManager = activity.sharedPreferencesManager
-        assertThat(sharedPreferencesManager, notNullValue())
-        assertThat(sharedPreferencesManager, instanceOf(SharedPreferencesManager::class.java))
-
-        val mainPagePresenter = activity.mainPagePresenter
-        assertThat(mainPagePresenter, notNullValue())
-        assertThat(mainPagePresenter, instanceOf(MainPagePresenter::class.java))
-
-        val searchRecyclerAdapter = activity.searchRecyclerAdapter
-        assertThat(searchRecyclerAdapter, notNullValue())
-        assertThat(searchRecyclerAdapter, instanceOf(SearchRecyclerAdapter::class.java))
-    }
 
     @Test
     @Throws(Exception::class)
