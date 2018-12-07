@@ -1,4 +1,4 @@
-package com.alex.githubsearchrepositories.network
+package com.alex.githubsearchrepositories.model.network
 
 const val BASE_URL = "https://api.github.com/"
 

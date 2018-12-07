@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.alex.githubsearchrepositories.R
-import com.alex.githubsearchrepositories.model.repo.Repo
+import com.alex.githubsearchrepositories.dto.repo.Repo
 import com.alex.githubsearchrepositories.util.DateFormatUtil
 import kotlinx.android.synthetic.main.item_repo_recycler.view.*
 

@@ -1,6 +1,6 @@
-package com.alex.githubsearchrepositories.model.search
+package com.alex.githubsearchrepositories.dto.search
 
-import com.alex.githubsearchrepositories.model.repo.Repo
+import com.alex.githubsearchrepositories.dto.repo.Repo
 import com.google.gson.annotations.SerializedName
 
 data class SearchResponseEntity(

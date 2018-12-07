@@ -1,6 +1,6 @@
-package com.alex.githubsearchrepositories.network
+package com.alex.githubsearchrepositories.model.network
 
-import com.alex.githubsearchrepositories.model.search.SearchResponseEntity
+import com.alex.githubsearchrepositories.dto.search.SearchResponseEntity
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET

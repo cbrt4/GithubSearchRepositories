@@ -1,6 +1,8 @@
-package com.alex.githubsearchrepositories.network
+package com.alex.githubsearchrepositories.providers
 
 import android.content.Context
+import com.alex.githubsearchrepositories.model.network.ApiRequestService
+import com.alex.githubsearchrepositories.model.network.BASE_URL
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.readystatesoftware.chuck.ChuckInterceptor

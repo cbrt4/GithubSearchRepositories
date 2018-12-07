@@ -1,8 +1,9 @@
-package com.alex.githubsearchrepositories.model.room.dao
+package com.alex.githubsearchrepositories.providers
 
 import android.arch.persistence.room.Room
 import android.content.Context
-import com.alex.githubsearchrepositories.model.room.AppDatabase
+import com.alex.githubsearchrepositories.model.persistense.AppDatabase
+import com.alex.githubsearchrepositories.model.persistense.dao.RepoDao
 
 class DaoProvider {
     companion object {

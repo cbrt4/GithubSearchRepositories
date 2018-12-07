@@ -1,9 +1,9 @@
 package com.alex.githubsearchrepositories.application
 
 import android.app.Application
-import com.alex.githubsearchrepositories.model.room.dao.DaoProvider
-import com.alex.githubsearchrepositories.network.ApiRequestServiceProvider
-import com.alex.githubsearchrepositories.sharedpreferences.SharedPreferencesProvider
+import com.alex.githubsearchrepositories.providers.ApiRequestServiceProvider
+import com.alex.githubsearchrepositories.providers.DaoProvider
+import com.alex.githubsearchrepositories.providers.SharedPreferencesProvider
 
 class GitHubApplication : Application() {
 

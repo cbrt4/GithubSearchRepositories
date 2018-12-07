@@ -1,4 +1,4 @@
-package com.alex.githubsearchrepositories.sharedpreferences
+package com.alex.githubsearchrepositories.model.sharedpreferences
 
 import android.content.Context
 

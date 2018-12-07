@@ -1,6 +1,7 @@
-package com.alex.githubsearchrepositories.sharedpreferences
+package com.alex.githubsearchrepositories.providers
 
 import android.content.Context
+import com.alex.githubsearchrepositories.model.sharedpreferences.SharedPreferences
 
 class SharedPreferencesProvider {
     companion object {

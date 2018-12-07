@@ -2,21 +2,24 @@ package com.alex.githubsearchrepositories.presenters
 
 import android.arch.lifecycle.Observer
 import android.util.Log
-import com.alex.githubsearchrepositories.model.repo.Repo
-import com.alex.githubsearchrepositories.model.room.dao.DaoProvider
-import com.alex.githubsearchrepositories.model.room.dao.RepoDao
-import com.alex.githubsearchrepositories.network.ApiRequestService
-import com.alex.githubsearchrepositories.network.ApiRequestServiceProvider
-import com.alex.githubsearchrepositories.sharedpreferences.SharedPreferences
-import com.alex.githubsearchrepositories.sharedpreferences.SharedPreferencesProvider
+import com.alex.githubsearchrepositories.dto.repo.Repo
+import com.alex.githubsearchrepositories.model.network.ApiRequestService
+import com.alex.githubsearchrepositories.model.persistense.dao.RepoDao
+import com.alex.githubsearchrepositories.model.sharedpreferences.SharedPreferences
+import com.alex.githubsearchrepositories.providers.ApiRequestServiceProvider
+import com.alex.githubsearchrepositories.providers.DaoProvider
+import com.alex.githubsearchrepositories.providers.SharedPreferencesProvider
 import com.alex.githubsearchrepositories.view.AbstractView
 import com.alex.githubsearchrepositories.view.activities.MainActivity
 import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
 
-class MainPagePresenter(private val apiRequestService: ApiRequestService = ApiRequestServiceProvider.apiRequestService(),
-                        private val repoDao: RepoDao = DaoProvider.repoDao(),
-                        private val sharedPreferencesManager: SharedPreferences = SharedPreferencesProvider.sharedPreferences()) : Presenter<AbstractView<List<Repo>>>() {
+class MainPagePresenter(private val apiRequestService: ApiRequestService =
+                                ApiRequestServiceProvider.apiRequestService(),
+                        private val repoDao: RepoDao =
+                                DaoProvider.repoDao(),
+                        private val sharedPreferencesManager: SharedPreferences =
+                                SharedPreferencesProvider.sharedPreferences()) : Presenter<AbstractView<List<Repo>>>() {
 
     private var currentQuery = ""
     private var currentJob: Job? = null
@@ -109,9 +112,5 @@ class MainPagePresenter(private val apiRequestService: ApiRequestService = ApiRe
     override fun cancel() {
         currentJob?.cancel()
         view?.hideLoading()
-    }
-
-    override fun destroy() {
-        view = null
     }
 }

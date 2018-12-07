@@ -5,7 +5,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
 import com.alex.githubsearchrepositories.R
-import com.alex.githubsearchrepositories.model.repo.Repo
+import com.alex.githubsearchrepositories.dto.repo.Repo
 import com.alex.githubsearchrepositories.presenters.MainPagePresenter
 import com.alex.githubsearchrepositories.util.Layout
 import com.alex.githubsearchrepositories.view.AbstractView
