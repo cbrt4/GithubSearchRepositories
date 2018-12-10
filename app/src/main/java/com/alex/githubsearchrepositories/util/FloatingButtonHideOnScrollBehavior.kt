@@ -10,7 +10,8 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 
 
-class FloatingButtonHideOnScrollBehavior(context: Context, attrs: AttributeSet) : FloatingActionButton.Behavior(context, attrs) {
+class FloatingButtonHideOnScrollBehavior(context: Context, attrs: AttributeSet) :
+        FloatingActionButton.Behavior(context, attrs) {
 
     var isShown = true
 
