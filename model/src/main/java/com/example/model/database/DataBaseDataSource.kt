@@ -7,7 +7,7 @@ class DataBaseDataSource @Inject constructor(private val appDatabase: AppDatabas
 
     suspend fun insertRepos(repos: List<Repo>) = appDatabase.repoDao().insertRepos(repos)
 
-    suspend fun getRepos() = appDatabase.repoDao().getRepos()
+    fun getRepos() = appDatabase.repoDao().getRepos()
 
     suspend fun clearRepos() = appDatabase.repoDao().clearRepos()
 }

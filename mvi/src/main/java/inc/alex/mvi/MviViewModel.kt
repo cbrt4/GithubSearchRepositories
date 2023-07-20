@@ -2,31 +2,44 @@ package inc.alex.mvi
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-abstract class MviViewModel<Intent, State> : ViewModel() {
+abstract class MviViewModel<I : MviIntent, S : MviState>(initialState: S) : ViewModel() {
 
-    abstract val state: StateFlow<State>
-    open val message = MutableSharedFlow<Any>()
+    private val mutableStateFlow = MutableStateFlow(initialState)
+    private val stateFlow: StateFlow<S> = mutableStateFlow.asStateFlow()
 
-    abstract fun dispatchIntent(intent: Intent)
+    private val mutableEventFlow = MutableSharedFlow<Any>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    private val eventFlow: SharedFlow<Any> = mutableEventFlow.asSharedFlow()
 
-    fun collectState(collector: (State) -> Unit) {
+    val state: S get() = stateFlow.value
+
+    abstract fun dispatchIntent(intent: I)
+
+    fun setState(reducer: S.() -> S) = mutableStateFlow.update(reducer)
+
+    fun sendEvent(event: Any) = mutableEventFlow.tryEmit(event)
+
+    fun collectState(collector: (S) -> Unit) {
         viewModelScope.launch {
-            state.collect(collector)
+            stateFlow.collect(collector)
         }
     }
 
-    fun collectMessage(collector: (message: Any?) -> Unit) {
+    fun collectEvent(collector: (Any?) -> Unit) {
         viewModelScope.launch {
-            message.collect(collector)
+            eventFlow.collect(collector)
         }
-    }
-
-    override fun onCleared() {
-        viewModelScope.cancel()
     }
 }

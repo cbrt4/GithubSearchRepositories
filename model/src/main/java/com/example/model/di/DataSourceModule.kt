@@ -21,20 +21,21 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataSourceModule {
-    @Singleton
+
     @Provides
+    @Singleton
     fun provideOkHttpClient(
         app: Application
     ): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(ChuckerInterceptor(app))
         .addNetworkInterceptor(HttpLoggingInterceptor { message ->
-            println("LOG-NET: $message")
+            println("OkHttp: $message")
         }.apply {
             level = HttpLoggingInterceptor.Level.BODY
         }).build()
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideRetrofit(
         client: OkHttpClient
     ): Retrofit = Retrofit.Builder()
@@ -43,14 +44,14 @@ object DataSourceModule {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    @Singleton
     @Provides
-    fun provideMarketsApi(
+    @Singleton
+    fun provideApiRequestService(
         retrofit: Retrofit
     ): ApiRequestService = retrofit.create(ApiRequestService::class.java)
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase =
         Room.databaseBuilder(
             appContext,

@@ -1,16 +1,21 @@
-package com.alex.githubsearchrepositories.view.adapters
+package com.alex.githubsearchrepositories.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.alex.githubsearchrepositories.R
 import com.alex.githubsearchrepositories.databinding.ItemRepoRecyclerBinding
-import com.alex.githubsearchrepositories.util.DateFormatUtil
+import com.alex.githubsearchrepositories.util.getTime
 import com.example.model.dto.repo.Repo
 
-class SearchRecyclerAdapter : RecyclerView.Adapter<SearchRecyclerAdapter.SearchViewHolder>() {
+class SearchRecyclerAdapter : RecyclerView.Adapter<SearchViewHolder>() {
 
-    var searchResults: List<Repo> = ArrayList()
+    private var searchResults: List<Repo> = ArrayList()
+
+    fun updateData(items: List<Repo>) {
+        searchResults = items
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         return SearchViewHolder(
@@ -29,18 +34,20 @@ class SearchRecyclerAdapter : RecyclerView.Adapter<SearchRecyclerAdapter.SearchV
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         holder.bindData(searchResults[holder.absoluteAdapterPosition])
     }
+}
 
-    inner class SearchViewHolder(private val binding: ItemRepoRecyclerBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bindData(repoEntity: Repo) {
-            binding.repoName.text = repoEntity.name
-            binding.repoDescription.text = repoEntity.description
-            binding.updatedAt.text = itemView.context.getString(
+class SearchViewHolder(private val binding: ItemRepoRecyclerBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+    fun bindData(repoEntity: Repo) = with(binding) {
+        repoName.text = repoEntity.name
+        repoDescription.text = repoEntity.description
+        updatedAt.text = itemView.context.let { context ->
+            context.getString(
                 R.string.updated,
-                DateFormatUtil.getTime(repoEntity.updatedAt)
+                repoEntity.updatedAt.getTime(context)
             )
-            binding.repoLanguage.text = repoEntity.language
-            binding.repoWatchers.text = repoEntity.watchers.toString()
         }
+        repoLanguage.text = repoEntity.language
+        repoWatchers.text = repoEntity.watchers.toString()
     }
 }

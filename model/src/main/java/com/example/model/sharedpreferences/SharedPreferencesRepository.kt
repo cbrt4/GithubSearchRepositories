@@ -4,7 +4,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class SharedPreferencesDataSource @Inject constructor(@ApplicationContext context: Context) {
+class SharedPreferencesRepository @Inject constructor(@ApplicationContext context: Context) {
 
     private val fileName = "search_preferences"
 
@@ -12,8 +12,8 @@ class SharedPreferencesDataSource @Inject constructor(@ApplicationContext contex
 
     private val sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
 
-    fun getLastSearchQuery(): String? = sharedPreferences.getString(lastSearchQueryKey, "")
+    fun getLastSearchQuery(): String? = sharedPreferences.getString(lastSearchQueryKey, null)
 
-    fun setLastSearchQuery(lastSearchQueryValue: String) =
+    fun saveLastSearchQuery(lastSearchQueryValue: String) =
         sharedPreferences.edit().putString(lastSearchQueryKey, lastSearchQueryValue).apply()
 }

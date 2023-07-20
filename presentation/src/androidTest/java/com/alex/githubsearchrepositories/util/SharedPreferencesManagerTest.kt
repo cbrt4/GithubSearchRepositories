@@ -1,9 +1,9 @@
 package com.alex.githubsearchrepositories.util
 
 import android.content.Context
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
-import androidx.test.rule.ActivityTestRule
 import com.alex.githubsearchrepositories.search.SearchActivity
 import org.junit.Rule
 import org.junit.Test
@@ -16,7 +16,8 @@ class SharedPreferencesManagerTest {
 
     @Rule
     @JvmField
-    var rule: ActivityTestRule<SearchActivity> = ActivityTestRule(SearchActivity::class.java)
+    var rule: ActivityScenarioRule<SearchActivity> =
+        ActivityScenarioRule(SearchActivity::class.java)
 
     private val fileName = "test_preferences"
 
@@ -26,15 +27,19 @@ class SharedPreferencesManagerTest {
 
     @Test
     fun getLastSearchQuery() {
-        val sharedPreferences = rule.activity.getSharedPreferences(fileName, Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString(testFieldKey, testFieldValue).apply()
-        assert(sharedPreferences.getString(testFieldKey, "") == testFieldValue)
+        rule.scenario.onActivity {
+            val sharedPreferences = it.getSharedPreferences(fileName, Context.MODE_PRIVATE)
+            sharedPreferences.edit().putString(testFieldKey, testFieldValue).apply()
+            assert(sharedPreferences.getString(testFieldKey, "") == testFieldValue)
+        }
     }
 
     @Test
     fun setLastSearchQuery() {
-        val sharedPreferences = rule.activity.getSharedPreferences(fileName, Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString(testFieldKey, testFieldValue1).apply()
-        assert(sharedPreferences.getString(testFieldKey, "") == testFieldValue1)
+        rule.scenario.onActivity {
+            val sharedPreferences = it.getSharedPreferences(fileName, Context.MODE_PRIVATE)
+            sharedPreferences.edit().putString(testFieldKey, testFieldValue1).apply()
+            assert(sharedPreferences.getString(testFieldKey, "") == testFieldValue1)
+        }
     }
 }

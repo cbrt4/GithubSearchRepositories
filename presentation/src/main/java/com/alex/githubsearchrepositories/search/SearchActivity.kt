@@ -1,26 +1,27 @@
 package com.alex.githubsearchrepositories.search
 
+import android.content.Context
 import android.os.Bundle
-import android.view.View
+import android.view.Gravity
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import com.alex.githubsearchrepositories.R
 import com.alex.githubsearchrepositories.databinding.ActivityMainBinding
-import com.alex.githubsearchrepositories.view.activities.AbstractActivity
-import com.alex.githubsearchrepositories.view.adapters.SearchRecyclerAdapter
-import com.example.model.dto.repo.Repo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchActivity : AbstractActivity() {
+class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
-    private val viewModel: SearchViewModel by viewModels()
+    private val viewModel by viewModels<SearchViewModel>()
 
     private val searchRecyclerAdapter = SearchRecyclerAdapter()
 
-    private var isLoading = false
     private var backPressedTimeOut: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,19 +29,11 @@ class SearchActivity : AbstractActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.collectState {
-            when (it) {
-                SearchViewModel.State.Idle -> hideLoading()
-                SearchViewModel.State.Loading -> showLoading()
-                is SearchViewModel.State.Success -> {
-                    hideLoading()
-                    update(it.data)
-                }
-
-                is SearchViewModel.State.Error -> {
-                    hideLoading()
-                    reportError(it.message)
-                }
+        viewModel.collectState(::updateUiState)
+        viewModel.collectEvent {
+            if (it is SearchViewModel.Event) when (it) {
+                SearchViewModel.Event.EmptyQuery -> showToast(getString(R.string.empty_query))
+                SearchViewModel.Event.LoadingError -> showToast(getString(R.string.loading_error))
             }
         }
 
@@ -48,70 +41,50 @@ class SearchActivity : AbstractActivity() {
     }
 
     private fun setupViews() {
+        setupEdiText()
         setupRecyclerView()
         setupSearchButton()
     }
 
-    private fun setupRecyclerView() = with(binding) {
-        resultsRecyclerView.adapter = searchRecyclerAdapter
+    private fun setupEdiText() = binding.searchEditText.addTextChangedListener {
+        viewModel.dispatchIntent(SearchIntent.UpdateQuery(it.toString()))
     }
 
-    private fun setupSearchButton() = with(binding) {
-        searchControlButton.setOnClickListener {
-            loadSearchResults()
-            hideKeyboard()
-        }
+    private fun setupRecyclerView() {
+        binding.resultsRecyclerView.adapter = searchRecyclerAdapter
     }
 
-    private fun loadSearchResults() = with(binding) {
-        if (!isLoading) {
-            val currentSearchQuery = searchEditText.text.toString()
-            if (currentSearchQuery.isEmpty()) {
-                showToast(getString(R.string.emty_query))
-                return
-            }
-            searchRecyclerAdapter.searchResults = ArrayList()
-            searchRecyclerAdapter.notifyDataSetChanged()
-            viewModel.dispatchIntent(SearchViewModel.Intent.Load(currentSearchQuery))
-        } else {
-            viewModel.dispatchIntent(SearchViewModel.Intent.Cancel)
-        }
+
+    private fun setupSearchButton() = binding.searchControlButton.setOnClickListener {
+        viewModel.dispatchIntent(SearchIntent.ToggleLoading)
+        hideKeyboard()
     }
 
-    private fun update(element: List<Repo>) {
-        searchRecyclerAdapter.searchResults = element
-        searchRecyclerAdapter.notifyDataSetChanged()
-    }
-
-    private fun showLoading() = with(binding) {
-        errorTextView.visibility = View.GONE
+    private fun updateUiState(state: SearchViewState) = with(binding) {
+        searchRecyclerAdapter.updateData(state.repos)
+        resultsRecyclerView.isVisible = !state.isLoading
+        loadingProgressBar.isVisible = state.isLoading
         searchControlButton.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
-                R.drawable.ic_cancel,
+                if (state.isLoading) R.drawable.ic_cancel else R.drawable.ic_confirm,
                 this@SearchActivity.theme
             )
         )
-        loadingProgressBar.visibility = View.VISIBLE
-        isLoading = true
+        // TODO: errorTextView.isVisible = state.isLoading???
     }
 
-    private fun hideLoading() = with(binding) {
-        searchControlButton.setImageDrawable(
-            ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.ic_confirm,
-                this@SearchActivity.theme
-            )
-        )
-        loadingProgressBar.visibility = View.GONE
-        isLoading = false
+    private fun showToast(message: String) {
+        val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
+        toast.setGravity(Gravity.CENTER, 0, 0)
+        toast.show()
     }
 
-    private fun reportError(errorMessage: String) = with(binding) {
-        searchRecyclerAdapter.searchResults = ArrayList()
-        errorTextView.visibility = View.VISIBLE
-        errorTextView.text = errorMessage
+    private fun hideKeyboard() {
+        this.currentFocus?.let {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
+        }
     }
 
     @Suppress("OVERRIDE_DEPRECATION")
