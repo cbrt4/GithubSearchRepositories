@@ -11,6 +11,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/model" />
+            <option value="$PROJECT_DIR$/model/data" />
+            <option value="$PROJECT_DIR$/model/local" />
+            <option value="$PROJECT_DIR$/model/network" />
             <option value="$PROJECT_DIR$/mvi" />
             <option value="$PROJECT_DIR$/view" />
           </set>

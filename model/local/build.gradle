@@ -1,11 +1,11 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.kapt'
+    id "org.jetbrains.kotlin.kapt"
 }
 
 android {
-    namespace 'inc.alex.mvi'
+    namespace 'inc.alex.local'
     compileSdk 34
 
     defaultConfig {
@@ -29,10 +29,22 @@ android {
 }
 
 dependencies {
-    def lifecycleVersion = '2.6.1'
+    def roomVersion = "2.5.2"
+    def gsonVersion = "2.10.1"
 
-    // ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    implementation(project(":model:data"))
+
+    // Room
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    kapt "com.google.dagger:hilt-compiler:$hiltVersion"
+
+    // Gson
+    implementation "com.google.code.gson:gson:$gsonVersion"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

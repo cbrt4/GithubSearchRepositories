@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
     namespace 'com.alex.githubsearchrepositories'
 
     defaultConfig {
         applicationId "com.alex.githubsearchrepositories"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -38,8 +38,10 @@ dependencies {
     def lifecycleVersion = '2.6.1'
     def retrofitVersion = "2.9.0"
 
-    implementation(project(":model"))
     implementation(project(":mvi"))
+    implementation(project(":model:network"))
+    implementation(project(":model:local"))
+    implementation(project(":model:data"))
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 

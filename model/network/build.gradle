@@ -1,11 +1,11 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.kapt'
+    id "org.jetbrains.kotlin.kapt"
 }
 
 android {
-    namespace 'inc.alex.mvi'
+    namespace 'inc.alex.network'
     compileSdk 34
 
     defaultConfig {
@@ -29,10 +29,23 @@ android {
 }
 
 dependencies {
-    def lifecycleVersion = '2.6.1'
+    def retrofitVersion = "2.9.0"
 
-    // ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    implementation(project(":model:data"))
+
+    // Network
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"
+    implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.11"
+
+    // Interceptors
+    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
+    implementation "com.github.chuckerteam.chucker:library:3.5.2"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
