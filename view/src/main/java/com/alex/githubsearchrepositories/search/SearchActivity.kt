@@ -19,10 +19,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel by viewModels<SearchViewModel>()
-
     private val searchRecyclerAdapter = SearchRecyclerAdapter()
-
-    private var backPressedTimeOut: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +30,7 @@ class SearchActivity : AppCompatActivity() {
         viewModel.collectEvent {
             if (it is SearchViewModel.Event) when (it) {
                 SearchViewModel.Event.EmptyQuery -> showToast(getString(R.string.empty_query))
+                SearchViewModel.Event.NoResults -> binding.errorTextView.isVisible = true
                 SearchViewModel.Event.LoadingError -> showToast(getString(R.string.loading_error))
             }
         }
@@ -71,7 +69,7 @@ class SearchActivity : AppCompatActivity() {
                 this@SearchActivity.theme
             )
         )
-        // TODO: errorTextView.isVisible = state.isLoading???
+        errorTextView.isVisible = false
     }
 
     private fun showToast(message: String) {
@@ -84,16 +82,6 @@ class SearchActivity : AppCompatActivity() {
         this.currentFocus?.let {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(it.windowToken, 0)
-        }
-    }
-
-    @Suppress("OVERRIDE_DEPRECATION")
-    override fun onBackPressed() {
-        if (backPressedTimeOut + 2000 > System.currentTimeMillis()) {
-            super.onBackPressed()
-        } else {
-            Toast.makeText(this, R.string.on_back_pressed, Toast.LENGTH_SHORT).show()
-            backPressedTimeOut = System.currentTimeMillis()
         }
     }
 }

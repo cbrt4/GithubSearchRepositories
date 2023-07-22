@@ -71,6 +71,7 @@ class SearchViewModel @Inject constructor(
             dataBaseRepository.clearRepos()
             dataBaseRepository.insertRepos(result.items)
             setState { copy(isLoading = false, repos = result.items) }
+            if (result.items.isEmpty()) sendEvent(Event.NoResults)
         } else response.errorBody()?.let { error ->
             setState { copy(isLoading = false) }
             sendEvent(Event.LoadingError)
@@ -82,12 +83,17 @@ class SearchViewModel @Inject constructor(
         dataBaseRepository.getRepos().collect {
             it?.let { repos ->
                 setState { copy(isLoading = false, repos = repos) }
-            } ?: setState { copy(isLoading = false) }
+                if (repos.isEmpty()) sendEvent(Event.NoResults)
+            } ?: run {
+                setState { copy(isLoading = false) }
+                sendEvent(Event.LoadingError)
+            }
         }
     }
 
     sealed class Event {
         object EmptyQuery : Event()
+        object NoResults : Event()
         object LoadingError : Event()
     }
 }
