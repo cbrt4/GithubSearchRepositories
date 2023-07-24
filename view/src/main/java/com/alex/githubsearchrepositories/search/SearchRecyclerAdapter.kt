@@ -6,12 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alex.githubsearchrepositories.R
 import com.alex.githubsearchrepositories.databinding.ItemRepoRecyclerBinding
 import com.alex.githubsearchrepositories.util.getTime
+import inc.alex.data.repo.Repo
 
 class SearchRecyclerAdapter : RecyclerView.Adapter<SearchViewHolder>() {
 
-    private var searchResults: List<inc.alex.data.repo.Repo> = ArrayList()
+    private var searchResults: List<Repo> = ArrayList()
 
-    fun updateData(items: List<inc.alex.data.repo.Repo>) {
+    fun updateData(items: List<Repo>) {
         searchResults = items
         notifyDataSetChanged()
     }
@@ -37,7 +38,7 @@ class SearchRecyclerAdapter : RecyclerView.Adapter<SearchViewHolder>() {
 
 class SearchViewHolder(private val binding: ItemRepoRecyclerBinding) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bindData(repoEntity: inc.alex.data.repo.Repo) = with(binding) {
+    fun bindData(repoEntity: Repo) = with(binding) {
         repoName.text = repoEntity.name
         repoDescription.text = repoEntity.description
         updatedAt.text = itemView.context.let { context ->

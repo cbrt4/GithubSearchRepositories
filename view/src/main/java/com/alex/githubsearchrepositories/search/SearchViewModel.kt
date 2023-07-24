@@ -3,9 +3,13 @@ package com.alex.githubsearchrepositories.search
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import inc.alex.data.repo.Repo
+import inc.alex.local.database.DataBaseRepository
+import inc.alex.local.sharedpreferences.SharedPreferencesRepository
 import inc.alex.mvi.MviIntent
 import inc.alex.mvi.MviState
 import inc.alex.mvi.MviViewModel
+import inc.alex.network.NetworkRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -14,7 +18,7 @@ import javax.inject.Inject
 data class SearchViewState(
     val query: String = "",
     val isLoading: Boolean = false,
-    val repos: List<inc.alex.data.repo.Repo> = emptyList()
+    val repos: List<Repo> = emptyList()
 ) : MviState
 
 sealed class SearchIntent : MviIntent {
@@ -24,9 +28,9 @@ sealed class SearchIntent : MviIntent {
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val networkRepository: inc.alex.network.NetworkRepository,
-    private val dataBaseRepository: inc.alex.local.database.DataBaseRepository,
-    private val sharedPreferencesRepository: inc.alex.local.sharedpreferences.SharedPreferencesRepository
+    private val networkRepository: NetworkRepository,
+    private val dataBaseRepository: DataBaseRepository,
+    private val sharedPreferencesRepository: SharedPreferencesRepository
 ) : MviViewModel<SearchIntent, SearchViewState>(SearchViewState()) {
 
     private var currentJob: Job? = null
